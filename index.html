@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta de Seguros</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            padding: 2.5rem; /* Increased padding */
+            box-sizing: border-box;
+        }
+        .category-card {
+            background-color: #f8fafc; /* Lighter background for cards */
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 180px; /* Ensure consistent height */
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .icon-wrapper {
+            background-color: #e0f2fe; /* Light blue for icons */
+            padding: 0.75rem;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon {
+            width: 28px; /* Larger icons */
+            height: 28px;
+            color: #2563eb; /* Blue icon color */
+        }
+        .category-title {
+            font-size: 1.25rem; /* Larger category titles */
+            font-weight: 600;
+            color: #1e3a8a; /* Darker blue for titles */
+            margin-bottom: 0.75rem;
+        }
+        .category-description {
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+        .main-title {
+            color: #1e3a8a;
+            font-weight: 700;
+            font-size: 2.5rem; /* Larger main title */
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .section-header {
+            font-size: 1.75rem; /* Larger section headers */
+            font-weight: 600;
+            color: #0c4a6e; /* Darker blue for section headers */
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #bfdbfe; /* Light blue border */
+        }
+        .email-contact {
+            background-color: #dbeafe; /* Lighter blue for email */
+            color: #1e40af; /* Darker blue for email text */
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            .section-header {
+                font-size: 1.5rem;
+            }
+            .category-card {
+                padding: 1rem;
+                min-height: 160px;
+            }
+            .category-title {
+                font-size: 1.1rem;
+            }
+            .category-description {
+                font-size: 0.85rem;
+            }
+            .icon {
+                width: 24px;
+                height: 24px;
+            }
+        }
+        .ai-section {
+            background-color: #f0f9ff; /* Very light blue for AI section */
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        .ai-section textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 1px solid #a7d9f8; /* Light blue border */
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1.5rem;
+        }
+        .ai-section button {
+            background-color: #2563eb; /* Blue button */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .ai-section button:hover {
+            background-color: #1e40af; /* Darker blue on hover */
+        }
+        .ai-response {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #e0f2fe; /* Lighter blue for response */
+            border-radius: 0.75rem;
+            border: 1px solid #bfdbfe;
+            color: #1e3a8a;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script type="module">
+        import { createIcons, Home, Car, Heart, ShieldCheck, Briefcase, Stethoscope, PiggyBank, CloudLightning, Sparkles } from 'https://cdn.jsdelivr.net/npm/lucide-icons/dist/lucide.esm.js';
+        createIcons({ icons: { Home, Car, Heart, ShieldCheck, Briefcase, Stethoscope, PiggyBank, CloudLightning, Sparkles } });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">Tu Futuro Protegido: Soluciones Integrales en Seguros Rp Asesor Patrimonial</h1>
+
+        <!-- Sección de Vida y Bienestar -->
+        <h2 class="section-header">Vida y Bienestar</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="category-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="heart" class="icon"></i>
+                </div>
+                <h3 class="category-title">Seguro de Vida</h3>
+                <p class="category-description">Respaldo económico para tus seres queridos ante cualquier imprevisto.</p>
+            </div>
+            <div class="category-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="stethoscope" class="icon"></i>
+                </div>
+                <h3 class="category-title">Seguro de Gastos Médicos Mayores</h3>
+                <p class="category-description">Acceso a atención médica de calidad sin preocupaciones financieras.</p>
+            </div>
+            <div class="category-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="piggy-bank" class="icon"></i>
+                </div>
+                <h3 class="category-title">Plan Personal de Retiro</h3>
+                <p class="category-description">Construye un futuro financiero sólido para tu jubilación.</p>
+            </div>
+        </div>
+
+        <!-- Sección de Protección Patrimonial (Daños) -->
+        <h2 class="section-header">Protección Patrimonial</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div class="category-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="car" class="icon"></i>
+                </div>
+                <h3 class="category-title">Seguro de Auto</h3>
+                <p class="category-description">Conduce con tranquilidad, protegido ante accidentes y robos.</p>
+            </div>
+            <div class="category-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="home" class="icon"></i>
+                </div>
+                <h3 class="category-title">Seguro de Casa</h3>
+                <p class="category-description">Resguarda tu hogar y tus bienes de cualquier eventualidad.</p>
+            </div>
+        </div>
+
+        <!-- Sección de Soluciones Empresariales -->
+        <h2 class="section-header">Soluciones Empresariales</h2>
+        <div class="grid grid-cols-1">
+            <div class="category-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="cloud-lightning" class="icon"></i>
+                </div>
+                <h3 class="category-title">Póliza para Ciberataques</h3>
+                <p class="category-description">Blindaje digital para tu negocio frente a amenazas cibernéticas.</p>
+            </div>
+        </div>
+
+        <!-- Nueva Sección: Asesor de Cobertura Rápida (Impulsado por Gemini API) -->
+        <div class="ai-section">
+            <h2 class="section-header">? Asesor de Cobertura Rápida ?</h2>
+            <p class="text-gray-700 mb-4 text-center">Describe brevemente tu situación o tus principales preocupaciones (ej. "Soy un joven profesional con familia y un coche nuevo", "Tengo un negocio en línea y me preocupa mi salud").</p>
+            <textarea id="needsInput" placeholder="Ej: Soy un emprendedor con una startup de tecnología y quiero proteger mi negocio y a mi equipo." class="rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+            <button id="getSuggestionsBtn" class="w-full md:w-auto">
+                <span id="buttonText">Obtener Sugerencias</span>
+                <div id="loadingSpinner" class="hidden loading-spinner"></div>
+            </button>
+            <div id="aiResponse" class="ai-response hidden"></div>
+        </div>
+
+        <!-- Correo de Contacto -->
+        <div class="email-contact">
+            Para una asesoría personalizada, contáctanos en: <br>
+            <a href="mailto:asesorpatrimonial500@gmail.com" class="font-bold underline">asesorpatrimonial500@gmail.com</a>
+        </div>
+    </div>
+
+    <script type="module">
+        const getSuggestionsBtn = document.getElementById('getSuggestionsBtn');
+        const needsInput = document.getElementById('needsInput');
+        const aiResponseDiv = document.getElementById('aiResponse');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const buttonText = document.getElementById('buttonText');
+
+        getSuggestionsBtn.addEventListener('click', async () => {
+            const userNeeds = needsInput.value.trim();
+            if (!userNeeds) {
+                aiResponseDiv.innerHTML = '<p class="text-red-600">Por favor, describe tus necesidades para obtener sugerencias.</p>';
+                aiResponseDiv.classList.remove('hidden');
+                return;
+            }
+
+            // Show loading state
+            buttonText.textContent = 'Cargando...';
+            loadingSpinner.classList.remove('hidden');
+            getSuggestionsBtn.disabled = true;
+            aiResponseDiv.classList.add('hidden'); // Hide previous response
+
+            const prompt = `Basado en la siguiente descripción de necesidades o situación: "${userNeeds}", sugiere qué tipos de seguros de la siguiente lista podrían ser más relevantes para esta persona, explicando brevemente por qué. La lista de seguros es: "Seguro de Vida", "Seguro de Gastos Médicos Mayores", "Plan Personal de Retiro", "Seguro de Auto", "Seguro de Casa", "Póliza para Ciberataques". Responde de forma concisa y profesional, enfocándote en la relevancia para el usuario.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Canvas will automatically provide the API key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    aiResponseDiv.innerHTML = `<p>${text}</p>`;
+                    aiResponseDiv.classList.remove('hidden');
+                } else {
+                    aiResponseDiv.innerHTML = '<p class="text-red-600">No se pudieron obtener sugerencias. Inténtalo de nuevo más tarde.</p>';
+                    aiResponseDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error al llamar a la API de Gemini:', error);
+                aiResponseDiv.innerHTML = '<p class="text-red-600">Ocurrió un error al procesar tu solicitud. Por favor, verifica tu conexión o intenta de nuevo.</p>';
+                aiResponseDiv.classList.remove('hidden');
+            } finally {
+                // Reset button state
+                buttonText.textContent = 'Obtener Sugerencias';
+                loadingSpinner.classList.add('hidden');
+                getSuggestionsBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
